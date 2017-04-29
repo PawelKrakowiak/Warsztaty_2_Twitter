@@ -4,9 +4,9 @@ $serverName = "localhost";
 $userName = "root";
 $password = "coderslab";
 
-$conn = new mysqli($serverName, $userName, $password, $baseName);
+$connection = new mysqli($serverName, $userName, $password, $baseName);
 
-if($conn->connect_error){
+if($connection->connect_error){
     die("Błąd: " . $conn->connect_error);
 }
 

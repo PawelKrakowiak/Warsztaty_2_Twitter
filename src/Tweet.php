@@ -75,7 +75,7 @@ class Tweet {
     }
 
     static public function loadAllTweetsByUserId(mysqli $connection, $userId) {
-        $sql = "SELECT * FROM Tweets WHERE user_id = $userId";
+        $sql = "SELECT * FROM Tweets WHERE user_id = $userId ORDER BY creation_date DESC";
         $ret = [];
         $result = $connection->query($sql);
         if ($result == true && $result->num_rows != 0) {
@@ -92,7 +92,7 @@ class Tweet {
     }
 
     static public function loadAllTweets(mysqli $connection) {
-        $sql = "SELECT * FROM Tweets";
+        $sql = "SELECT * FROM Tweets ORDER BY creation_date DESC";
         $ret = [];
         $result = $connection->query($sql);
         if ($result == true && $result->num_rows != 0) {

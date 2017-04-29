@@ -1,7 +1,5 @@
 <?php
 
-require ('../utils/connection.php');
-
 class User {
 
     private $id;
