@@ -1,6 +1,6 @@
 <?php
 
-require ('connection.php');
+require ('../utils/connection.php');
 
 class User {
 
