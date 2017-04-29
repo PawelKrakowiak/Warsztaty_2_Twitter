@@ -73,6 +73,25 @@ class User {
         return true;
     }
 
+    static public function logIn(mysqli $connection, $email, $password) {
+        $hashedPass = password_hash($password, PASSWORD_BCRYPT);
+        $sql = "SELECT * FROM Users WHERE email = '$email' AND hashed_password = '$password'";
+        $result = $connection->query($sql);
+        if ($result == false) {
+            echo "Wystąpił błąd podczas logowania. Spróbuj ponownie.";
+            return false;
+        } else {
+            if ($result->num_rows == 1) {
+                $loggingUser = $result->fetch_assoc();
+                $_SESSION['loggedUser'] = $loggingUser['id'];
+                return true;
+            } else {
+                echo "Nieprawidłowe hasło lub brak adresu w bazie. Spróbuj ponownie";
+                return false;
+            }
+        }
+    }
+
     static public function loadUserById(mysqli $connection, $id) {
         $sql = "SELECT * FROM Users WHERE id = $id";
         $result = $connection->query($sql);

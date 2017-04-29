@@ -1,10 +1,34 @@
 <?php
+session_start();
+require_once ('utils/connection.php');
+require_once('src/User.php');
+
+echo "<h3> Aby korzystać z naszego serwisu, musisz się zalogować. </h3>";
+
+if($_SERVER['REQUEST_METHOD'] == 'POST'){
+    $email = $connection->real_escape_string($_POST['email']);
+    $password = $connection->real_escape_string($_POST['password']);
+    
+    var_dump(User::logIn($connection, $email, $password));
+    
+    if(User::logIn($connection, $email, $password) == true){
+        header("location: index.php");
+    } 
+    /*else{
+        header("location: login.php");
+    } */
+}
+
 //obsługa formularza logowania
 //czy w bazie jest użytkownik o podanym emailu i haśle?
 //jeśli tak - zaloguj
 //jeśli nie - wyświetl komunikat
 ?>
 
-<!--Formuarz do logowania-->
+<form name="login" action="login.php" method="POST">
+    <input type="email" name="email" placeholder="Podaj adres e-mail">
+    <input type="password" name="password" placeholder="Podaj hasło">
+    <input type="submit" value="Login">
+</form>
 
-<!--link do rejestracji konta-->
+<a href="register.php">Nie posiadasz konta w naszym serwisie? Zarejestruj się!</a>

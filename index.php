@@ -1,15 +1,19 @@
 <?php
+session_start();
+require_once ('utils/check_login.php');
 require_once ('utils/connection.php');
 require_once ('src/Tweet.php');
 require_once('src/User.php');
 
+var_dump($_SESSION['loggedUser']);
 //Sprawdź czy użytkownik jest zalogowany
 
 //obsługa formularza dodawania wpisu
 
 $tweets = Tweet::loadAllTweets($connection);
 
-var_dump($tweets);
+$users = User::loadAllUsers($connection);
+
 
 $id = 0;
 $uId = 0;
