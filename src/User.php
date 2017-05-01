@@ -6,6 +6,8 @@ class User {
     private $username;
     private $hashedPassword;
     private $email;
+    private $gender;
+    private $birthDate;
 
     public function __construct() {
         $this->id = -1;
@@ -24,6 +26,7 @@ class User {
 
     public function setEmail($email) {
         $this->email = $email;
+        return $this;
     }
 
     public function getUsername() {
@@ -32,25 +35,45 @@ class User {
 
     public function setUsername($username) {
         $this->username = $username;
+        return $this;
     }
 
     public function setHashedPassword($password) {
 
         $this->hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+        return $this;
+    }
+
+    public function getGender() {
+        return $this->gender;
+    }
+
+    public function getBirthDate() {
+        return $this->birthDate;
+    }
+
+    public function setGender($gender) {
+        $this->gender = $gender;
+        return $this;
+    }
+
+    public function setBirthDate($birthDate) {
+        $this->birthDate = $birthDate;
+        return $this;
     }
 
     public function saveToDB(mysqli $connection) {
         if ($this->id == -1) {
-            $sql = "INSERT INTO Users (email, username, hashed_password) VALUES"
-                    . "('$this->email', '$this->username', '$this->hashedPassword')";
+            $sql = "INSERT INTO Users (email, username, hashed_password, gender, birth_date) VALUES"
+                    . "('$this->email', '$this->username', '$this->hashedPassword', '$this->gender', '$this->birthDate')";
             $result = $connection->query($sql);
             if ($result == true) {
                 $this->id = $connection->insert_id;
                 return true;
             }
         } else {
-            $sql = "UPDATE Users SET username = '$this->username', email = '$this->email', hashed_password = '$this->hashedPassword'
-                   WHERE id = $this->id";
+            $sql = "UPDATE Users SET username = '$this->username', email = '$this->email', hashed_password = '$this->hashedPassword',
+                   gender = '$this->gender', birth_date = '$this->birthDate' WHERE id = $this->id";
             $result = $connection->query($sql);
             if ($result == true) {
                 return $result;
@@ -92,6 +115,24 @@ class User {
         }
     }
 
+    static public function register(mysqli $connection, $email, $password, $username, $birthDate, $gender) {
+        $sql = "SELECT email FROM Users WHERE email = '$email'";
+        $emailCheck = $connection->query($sql);
+        if ($emailCheck->num_rows == 0) {
+            $newUser = new User();
+            $newUser->setEmail($email)
+                    ->setUsername($username)
+                    ->setHashedPassword($password)
+                    ->setGender($gender)
+                    ->setBirthDate($birthDate);
+            $newUser->saveToDB($connection);
+            return true;
+        } else {
+            echo "Podany adres e-mail znajduje się już w naszej bazie <br>";
+            return false;
+        }
+    }
+
     static public function loadUserById(mysqli $connection, $id) {
         $sql = "SELECT * FROM Users WHERE id = $id";
         $result = $connection->query($sql);
@@ -102,6 +143,8 @@ class User {
             $loadedUser->email = $row['email'];
             $loadedUser->username = $row['username'];
             $loadedUser->hashedPassword = $row['hashed_password'];
+            $loadedUser->birthDate = $row['birth_date'];
+            $loadedUser->gender = $row['gender'];
 
             return $loadedUser;
         }
@@ -119,6 +162,8 @@ class User {
                 $loadedUser->email = $row['email'];
                 $loadedUser->username = $row['username'];
                 $loadedUser->hashedPassword = $row['hashed_password'];
+                $loadedUser->birthDate = $row['birth_date'];
+                $loadedUser->gender = $row['gender'];
                 $ret[] = $loadedUser;
             }
         }

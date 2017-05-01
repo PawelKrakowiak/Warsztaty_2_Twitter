@@ -7,16 +7,10 @@ echo "<h3> Aby korzystać z naszego serwisu, musisz się zalogować. </h3>";
 
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $email = $connection->real_escape_string($_POST['email']);
-    $password = $connection->real_escape_string($_POST['password']);
-    
-    var_dump(User::logIn($connection, $email, $password));
-    
+    $password = $connection->real_escape_string($_POST['password']);    
     if(User::logIn($connection, $email, $password) == true){
         header("location: index.php");
     } 
-    /*else{
-        header("location: login.php");
-    } */
 }
 
 //obsługa formularza logowania
