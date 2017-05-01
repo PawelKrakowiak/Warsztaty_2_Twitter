@@ -5,6 +5,8 @@ require_once ('utils/connection.php');
 require_once ('src/Tweet.php');
 require_once('src/User.php');
 
+echo "<a href='login.php?action=logout'>Wyloguj się</a>";
+
 var_dump($_SESSION['loggedUser']);
 //Sprawdź czy użytkownik jest zalogowany
 

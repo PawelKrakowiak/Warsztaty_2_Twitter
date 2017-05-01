@@ -3,7 +3,12 @@ session_start();
 require_once ('utils/connection.php');
 require_once('src/User.php');
 
+if(($_SERVER['REQUEST_METHOD'] == 'GET') && ($_GET['action'] == 'logout')){
+        User::logOut();
+}
+
 echo "<h3> Aby korzystać z naszego serwisu, musisz się zalogować. </h3>";
+
 
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $email = $connection->real_escape_string($_POST['email']);

@@ -97,8 +97,7 @@ class User {
     }
 
     static public function logIn(mysqli $connection, $email, $password) {
-        $hashedPass = password_hash($password, PASSWORD_BCRYPT);
-        $sql = "SELECT * FROM Users WHERE email = '$email' AND hashed_password = '$password'";
+        $sql = "SELECT * FROM Users WHERE email = '$email'";
         $result = $connection->query($sql);
         if ($result == false) {
             echo "Wystąpił błąd podczas logowania. Spróbuj ponownie.";
@@ -106,13 +105,23 @@ class User {
         } else {
             if ($result->num_rows == 1) {
                 $loggingUser = $result->fetch_assoc();
-                $_SESSION['loggedUser'] = $loggingUser['id'];
-                return true;
+                if (password_verify($password, $loggingUser['hashed_password']) == true) {
+                    $_SESSION['loggedUser'] = $loggingUser['id'];
+                    return true;
+                } else{
+                    echo "Podane hasło jest nieprawidłowe. Spróbuj ponownie.";
+                    return false;
+                }
             } else {
-                echo "Nieprawidłowe hasło lub brak adresu w bazie. Spróbuj ponownie";
+                echo "Podany adres email nie występuje w bazie. Spróbuj ponownie lub <a href='register.php'>zarejestruj się</a>";
                 return false;
             }
         }
+    }
+
+    static public function logOut() {
+        unset($_SESSION['loggedUser']);
+        echo "Zostałeś poprawnie wylogowany. <br>";
     }
 
     static public function register(mysqli $connection, $email, $password, $username, $birthDate, $gender) {
