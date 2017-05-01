@@ -30,12 +30,19 @@ class Tweet {
         return $this->creationDate;
     }
 
+    public function setUserId($userId) {
+        $this->userId = $userId;
+        return $this;
+    }
+
     public function setText($text) {
         $this->text = $text;
+        return $this;
     }
 
     public function setCreationDate($creationDate) {
         $this->creationDate = $creationDate;
+        return $this;
     }
 
     public function saveToDB(mysqli $connection) {
@@ -107,4 +114,19 @@ class Tweet {
         }
         return $ret;
     }
+
+    static public function addTweet($connection, $time, $text, $userId) {
+        if (1 == 1) {
+            $tweet = new Tweet();
+            $tweet->setCreationDate($time)->setText($text)->setUserId($userId);
+            if ($tweet->saveToDB($connection) == true) {
+                echo "Dodano nowego Tweeta :)<br>";
+                return true;
+            } else {
+                echo "Błąd, nie udało się dodać Tweeta :( <br>";
+                return false;
+            }
+        }
+    }
+
 }

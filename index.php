@@ -5,40 +5,44 @@ require_once ('utils/connection.php');
 require_once ('src/Tweet.php');
 require_once('src/User.php');
 
-echo "<a href='login.php?action=logout'>Wyloguj się</a>";
-
-var_dump($_SESSION['loggedUser']);
-//Sprawdź czy użytkownik jest zalogowany
-
-//obsługa formularza dodawania wpisu
-
-$tweets = Tweet::loadAllTweets($connection);
-
-$users = User::loadAllUsers($connection);
-
-
-$id = 0;
-$uId = 0;
-$text = "";
-$creationDate = "";
-
-
-for($i = 0; $i<count($tweets); $i++){
-    $id = $tweets[$i] -> getId();
-    $creationDate = $tweets[$i] -> getCreationDate();
-    $text = $tweets[$i] ->getText();
-    $uId = $tweets[$i] ->getUserId();
-    $user = User::loadUserById($connection, $uId);
-    $uName = $user->getUsername();
-    echo "Tweet użytkownika $uName Napisany: $creationDate . <br>";
-    echo $text . "<hr>";
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $text = $_POST['tweet'];
+    $time = date('Y-m-d H:i:s', time());
+    Tweet::addTweet($connection, $time, $text, $_SESSION['loggedUser']);
 }
 
+echo "<a href='login.php?action=logout'>Wyloguj się</a><br><br>";
+
+echo "Witaj, " . $_SESSION["loggedUserName"] . " :) <br><br>";
+
+$tweets = Tweet::loadAllTweets($connection);
 ?>
 
-<!--  Formualrz dodawania wpisu  -->
+<form name="tweetAdd" action="index.php" method="POST">
+    <label>
+        Napisz tweeta <br>
+        <textarea name="tweet">
+            Napisz cośtam cośtam
+        </textarea>
+    </label>
+    <input type="submit" value="Wyślij">
+</form>
+
 
 <!--  Link do wiadomości zalogowanego użytkownika  -->
 <!--  Link do edycji danych zalogowanego użytkownika  -->
 
 <!--  Lista wpisów (jako linki do post.php?id=xxx   -->
+
+
+<?php
+for ($i = 0; $i < count($tweets); $i++) {
+    $id = $tweets[$i]->getId();
+    $creationDate = $tweets[$i]->getCreationDate();
+    $text = $tweets[$i]->getText();
+    $uId = $tweets[$i]->getUserId();
+    $user = User::loadUserById($connection, $uId);
+    $uName = $user->getUsername();
+    echo "Tweet użytkownika $uName Napisany: $creationDate . <br>";
+    echo $text . "<hr>";
+}

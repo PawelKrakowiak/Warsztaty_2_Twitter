@@ -107,6 +107,7 @@ class User {
                 $loggingUser = $result->fetch_assoc();
                 if (password_verify($password, $loggingUser['hashed_password']) == true) {
                     $_SESSION['loggedUser'] = $loggingUser['id'];
+                    $_SESSION['loggedUserName'] = $loggingUser['username'];
                     return true;
                 } else{
                     echo "Podane hasło jest nieprawidłowe. Spróbuj ponownie.";
