@@ -43,6 +43,6 @@ for ($i = 0; $i < count($tweets); $i++) {
     $uId = $tweets[$i]->getUserId();
     $user = User::loadUserById($connection, $uId);
     $uName = $user->getUsername();
-    echo "Tweet użytkownika $uName Napisany: $creationDate . <br>";
-    echo $text . "<hr>";
+    echo "Tweet użytkownika <a href=" . '"' . "user_details.php?id=$uId" . '">' . "$uName</a> Napisany: $creationDate . <br>";
+    echo "<a href=" . '"'. "post_details.php?id=$id" . '">' . "$text</a><hr>";
 }
