@@ -7,7 +7,7 @@ require_once('src/User.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $text = $_POST['tweet'];
-    $time = date('Y-m-d H:i:s', time());
+    $time = date('Y-m-d H:i:s');
     Tweet::addTweet($connection, $time, $text, $_SESSION['loggedUser']);
 }
 
@@ -32,8 +32,6 @@ $tweets = Tweet::loadAllTweets($connection);
 <!--  Link do wiadomości zalogowanego użytkownika  -->
 <!--  Link do edycji danych zalogowanego użytkownika  -->
 
-<!--  Lista wpisów (jako linki do post.php?id=xxx   -->
-
 
 <?php
 for ($i = 0; $i < count($tweets); $i++) {
@@ -43,6 +41,7 @@ for ($i = 0; $i < count($tweets); $i++) {
     $uId = $tweets[$i]->getUserId();
     $user = User::loadUserById($connection, $uId);
     $uName = $user->getUsername();
-    echo "Tweet użytkownika <a href=" . '"' . "user_details.php?id=$uId" . '">' . "$uName</a> Napisany: $creationDate . <br>";
-    echo "<a href=" . '"'. "post_details.php?id=$id" . '">' . "$text</a><hr>";
+    echo "<a href=" . '"' . "user_details.php?id=$uId" . '">' . "<h3>$uName</h3></a>"
+       . "$creationDate . <br>"
+       . "<a href=" . '"'. "post_details.php?id=$id" . '">' . "$text</a><hr>";
 }

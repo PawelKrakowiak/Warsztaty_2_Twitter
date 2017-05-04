@@ -62,6 +62,18 @@ class User {
         return $this;
     }
 
+    public function checkBirthday() {
+        $birthday = date("z", strtotime($this->getBirthDate()));
+        $now = date("z");
+        if($birthday - $now >= 0){
+            $timeToBirthday = ($birthday + 1) - ($now +1);
+        } else{
+            $timeToBirthday = 365 - ($now + 1) + ($birthday + 1);
+        }
+        return $timeToBirthday;
+    }
+        
+
     public function saveToDB(mysqli $connection) {
         if ($this->id == -1) {
             $sql = "INSERT INTO Users (email, username, hashed_password, gender, birth_date) VALUES"
@@ -109,7 +121,7 @@ class User {
                     $_SESSION['loggedUser'] = $loggingUser['id'];
                     $_SESSION['loggedUserName'] = $loggingUser['username'];
                     return true;
-                } else{
+                } else {
                     echo "Podane hasło jest nieprawidłowe. Spróbuj ponownie.";
                     return false;
                 }
