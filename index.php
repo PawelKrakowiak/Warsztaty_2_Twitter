@@ -1,9 +1,10 @@
 <?php
 session_start();
-require_once ('utils/check_login.php');
-require_once ('utils/connection.php');
-require_once ('src/Tweet.php');
-require_once('src/User.php');
+require_once 'utils/check_login.php';
+require_once 'utils/connection.php';
+require_once 'src/Tweet.php';
+require_once 'src/User.php';
+require_once 'src/Comment.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $text = $_POST['tweet'];
@@ -35,13 +36,19 @@ $tweets = Tweet::loadAllTweets($connection);
 
 <?php
 for ($i = 0; $i < count($tweets); $i++) {
+    
     $id = $tweets[$i]->getId();
     $creationDate = $tweets[$i]->getCreationDate();
     $text = $tweets[$i]->getText();
+    
     $uId = $tweets[$i]->getUserId();
     $user = User::loadUserById($connection, $uId);
     $uName = $user->getUsername();
+    
+    $commentsCounter = Comment::countAllCommentsByTweetId($connection, $id);
+    
     echo "<a href=" . '"' . "user_details.php?id=$uId" . '">' . "<h3>$uName</h3></a>"
        . "$creationDate . <br>"
-       . "<a href=" . '"'. "post_details.php?id=$id" . '">' . "$text</a><hr>";
+       . "<a href=" . '"'. "post_details.php?id=$id" . '">' . "$text</a><br>"
+       . "<a href=" . '"' . "post_details.php?id=$id" . '">' . "Komentarze: $commentsCounter </a><hr>";
 }

@@ -113,6 +113,16 @@ class Comment {
         }
         return null;
     }
+    static public function countAllCommentsByTweetId(mysqli $connection, $tweetId){
+        $sql = "SELECT COUNT(id) AS numberOfComments FROM Comments WHERE tweet_id = $tweetId";
+        $result = $connection->query($sql);
+        if ($result == true){
+            $ret = $result->fetch_assoc();
+            return $ret['numberOfComments'];
+        } else{
+            return 0;
+        }
+    }
 
     static public function addComment($connection, $time, $text, $userId, $tweetId) {
         if (1 == 1) {
@@ -129,3 +139,4 @@ class Comment {
         }
     }
 }
+
