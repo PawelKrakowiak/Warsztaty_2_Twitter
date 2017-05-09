@@ -1,11 +1,53 @@
 <?php
-//sprawdzimy czy zalogowany
+session_start();
+require_once 'utils/check_login.php';
+require_once 'utils/connection.php';
+require_once 'src/User.php';
+require_once 'src/Message.php';
 
-//pobierz wiadomość z bazy na podstawie $_GET['id']
-//JOIN users aby pobrać nazwę nadawcy i jeszcze raz JOIN users żeby pobrać nazwę odbiorcy
+$messageId = $_GET['id'];
 
-//SELECT * FROM Message m
-//JOIN users ua ON m.author_id = ua.id
-//JOIN users ur ON ur.id = m.recipient
-//WHERE m.id = $_GET['id']
-//        - mysql_real_escape_string();
+$sql = "SELECT * FROM Messages WHERE id = $messageId";
+
+$result = $connection->query($sql);
+
+$message = $result->fetch_assoc();
+$senderId = $message['sender_id'];
+$senderName = User::loadUserById($connection, $senderId)->getUsername();
+$receiverId = $message['receiver_id'];
+$receiverName = User::loadUserById($connection, $receiverId)->getUsername();
+$text = $message['text'];
+$time = $message['creation_date'];
+
+echo "
+    <table id='message'>
+        <tr>
+            <th>
+                Nadawca
+            </th>
+            <th>
+                Odbiorca
+            </th>
+            <th>
+                Treść
+            </th>
+            <th>
+                Data
+            </th>
+        </tr>
+        <tr>
+            <td>
+                <a href='user_details.php?id=$senderId'>$senderName</a>
+            </td>   
+            <td>
+                <a href='user_details.php?id=$receiverId'>$receiverName</a>
+            </td>  
+            <td>
+                $text
+            </td>
+            <td>
+                $time
+            </td>
+        </tr>
+    </table>
+    ";
