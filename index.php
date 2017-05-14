@@ -14,6 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $time = date('Y-m-d H:i:s');
     if(Tweet::addTweet($connection, $time, $text, $_SESSION['loggedUser'])){
         echoCenter("Dodano nowego tweeta");
+    }else{
+        echoCenter("Błąd, nie udało się dodać tweeta.",1);
     }
 }
 $id = $_SESSION['loggedUser'];

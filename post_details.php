@@ -39,7 +39,7 @@ echo "<div class='container text-center'>
 echo "<div class='container'>
                 <form name='commAdd' action='post_details.php?id=$tId' method='POST' id='commAdd'>
                     <label for='tweetAdd'>Napisz komentarz</label>
-                    <textarea class='form-control' rows=3 name='comment'></textarea>
+                    <textarea class='form-control' rows=3 name='comment' maxlength='60'></textarea>
                     <button type='submit' class='btn btn-success'>
                         <i class='icon-circle-arrow-right icon-large'></i> Dodaj
                     </button>

@@ -107,7 +107,7 @@ class User {
                 $this->id = -1;
                 return true;
             } else {
-                var_dump($connection->error_list);
+                var_dump($connection->error);
                 return false;
             }
         }
