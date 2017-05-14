@@ -65,14 +65,13 @@ class User {
     public function checkBirthday() {
         $birthday = date("z", strtotime($this->getBirthDate()));
         $now = date("z");
-        if($birthday - $now >= 0){
-            $timeToBirthday = ($birthday + 1) - ($now +1);
-        } else{
+        if ($birthday - $now >= 0) {
+            $timeToBirthday = ($birthday + 1) - ($now + 1);
+        } else {
             $timeToBirthday = 365 - ($now + 1) + ($birthday + 1);
         }
         return $timeToBirthday;
     }
-        
 
     public function saveToDB(mysqli $connection) {
         if ($this->id == -1) {
@@ -96,23 +95,31 @@ class User {
 
     public function delete(mysqli $connection) {
         if ($this->id != -1) {
-            $sql = "DELETE FROM Users WHERE id=$this->id";
-            $result = $connection->query($sql);
-            if ($result == true) {
+            $sql1 = "DELETE FROM Users WHERE id=$this->id";
+            $sql2 = "DELETE FROM Tweets WHERE user_id=$this->id";
+            $sql3 = "DELETE FROM Comments WHERE user_id=$this->id";
+            $sql4 = "DELETE FROM Messages WHERE sender_id=$this->id OR receiver_id=$this->id";
+            $result1 = $connection->query($sql1);
+            $result2 = $connection->query($sql2);
+            $result3 = $connection->query($sql3);
+            $result4 = $connection->query($sql4);
+            if ($result1 && $result2 && $result3 && $result4) {
                 $this->id = -1;
                 return true;
             } else {
+                var_dump($connection->error_list);
                 return false;
             }
         }
         return true;
     }
 
+
     static public function logIn(mysqli $connection, $email, $password) {
         $sql = "SELECT * FROM Users WHERE email = '$email'";
         $result = $connection->query($sql);
         if ($result == false) {
-            echo "Wystąpił błąd podczas logowania. Spróbuj ponownie.";
+            echoCenter("Wystąpił błąd podczas logowania. Spróbuj ponownie.", 1);
             return false;
         } else {
             if ($result->num_rows == 1) {
@@ -122,11 +129,11 @@ class User {
                     $_SESSION['loggedUserName'] = $loggingUser['username'];
                     return true;
                 } else {
-                    echo "Podane hasło jest nieprawidłowe. Spróbuj ponownie.";
+                    echoCenter("Podane hasło jest nieprawidłowe. Spróbuj ponownie.", 1);
                     return false;
                 }
             } else {
-                echo "Podany adres email nie występuje w bazie. Spróbuj ponownie lub <a href='register.php'>zarejestruj się</a>";
+                echoCenter("Podany adres email nie występuje w bazie. Spróbuj ponownie lub <a href='register.php'>Zarejestruj się</a>", 1);
                 return false;
             }
         }
@@ -134,7 +141,15 @@ class User {
 
     static public function logOut() {
         unset($_SESSION['loggedUser']);
-        echo "Zostałeś poprawnie wylogowany. <br>";
+                echo "<div class='container text-center'>
+                        <div class='row'>
+                            <div class='col-md-2'></div>
+                            <div class='col-md-8'>
+                                <p><h3>Zostałeś poprawnie wylogowany</h3></p>
+                            </div>
+                            <div class='col-md-2'></div>
+                        </div>
+                    </div>";
     }
 
     static public function register(mysqli $connection, $email, $password, $username, $birthDate, $gender) {
@@ -147,16 +162,45 @@ class User {
                     ->setHashedPassword($password)
                     ->setGender($gender)
                     ->setBirthDate($birthDate);
-            $newUser->saveToDB($connection);
-            return true;
+            if($newUser->saveToDB($connection) == true){
+                return true;
+            } else{
+                return false;
+            }   
         } else {
-            echo "Podany adres e-mail znajduje się już w naszej bazie <br>";
+                echo "<div class='container text-center'>
+                        <div class='row'>
+                            <div class='col-md-2'></div>
+                            <div class='col-md-8'>
+                                <p><h3 class='fail'>Podany adres e-mail znajdu się już w naszej bazie.</h3></p>
+                            </div>
+                            <div class='col-md-2'></div>
+                        </div>
+                    </div>";
             return false;
         }
     }
 
     static public function loadUserById(mysqli $connection, $id) {
         $sql = "SELECT * FROM Users WHERE id = $id";
+        $result = $connection->query($sql);
+        if ($result == true && $result->num_rows == 1) {
+            $row = $result->fetch_assoc();
+            $loadedUser = new User();
+            $loadedUser->id = $row['id'];
+            $loadedUser->email = $row['email'];
+            $loadedUser->username = $row['username'];
+            $loadedUser->hashedPassword = $row['hashed_password'];
+            $loadedUser->birthDate = $row['birth_date'];
+            $loadedUser->gender = $row['gender'];
+
+            return $loadedUser;
+        }
+        return null;
+    }
+
+    static public function loadUserByUsername(mysqli $connection, $username) {
+        $sql = "SELECT * FROM Users WHERE username = '$username'";
         $result = $connection->query($sql);
         if ($result == true && $result->num_rows == 1) {
             $row = $result->fetch_assoc();

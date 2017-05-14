@@ -64,8 +64,6 @@ class Comment {
             if ($result == true) {
                 $this->id = $connection->insert_id;
                 return $result;
-            } else{
-                echo $connection->error;
             }
         } else {
             $sql = "UPDATE Comments SET tweet_id = '$this->tweetId', user_id = '$this->userId', text = '$this->text', creation_date = '$this->creationDate'
@@ -130,10 +128,8 @@ class Comment {
             $comment->setCreationDate($time)->setText($text)->setUserId($userId)->setTweetId($tweetId);
             
             if ($comment->saveToDB($connection) == true) {
-                echo "Dodano nowy komentarz :)<br>";
                 return true;
             } else {
-                echo "Błąd, nie udało się dodać komentarza :( <br>";
                 return false;
             }
         }

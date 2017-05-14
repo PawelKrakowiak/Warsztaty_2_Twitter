@@ -120,10 +120,8 @@ class Tweet {
             $tweet = new Tweet();
             $tweet->setCreationDate($time)->setText($text)->setUserId($userId);
             if ($tweet->saveToDB($connection) == true) {
-                echo "Dodano nowego Tweeta :)<br>";
                 return true;
             } else {
-                echo "Błąd, nie udało się dodać Tweeta :( <br>";
                 return false;
             }
         }

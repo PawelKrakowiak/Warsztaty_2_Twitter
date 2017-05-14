@@ -2,13 +2,13 @@
 session_start();
 require_once ('utils/connection.php');
 require_once('src/User.php');
+require_once 'templates/header.html';
+require_once 'templates/navbar_unlogged.html';
+require_once 'utils/echo.php';
 
-if(($_SERVER['REQUEST_METHOD'] == 'GET') && ($_GET['action'] == 'logout')){
+if(isset($_GET['action']) && ($_GET['action'] == 'logout')){
         User::logOut();
 }
-
-echo "<h3> Aby korzystać z naszego serwisu, musisz się zalogować. </h3>";
-
 
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $email = $connection->real_escape_string($_POST['email']);
@@ -17,17 +17,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         header("location: index.php");
     } 
 }
+require_once 'templates/login_form.html';
 
-//obsługa formularza logowania
-//czy w bazie jest użytkownik o podanym emailu i haśle?
-//jeśli tak - zaloguj
-//jeśli nie - wyświetl komunikat
-?>
+echoCenter("Pierwszy raz na Twitterze?<a href='register.php'> Zarejestruj się</a>");
 
-<form name="login" action="login.php" method="POST">
-    <input type="email" name="email" placeholder="Podaj adres e-mail">
-    <input type="password" name="password" placeholder="Podaj hasło">
-    <input type="submit" value="Login">
-</form>
-
-<a href="register.php">Nie posiadasz konta w naszym serwisie? Zarejestruj się!</a>
+require_once 'templates/footer.html';

@@ -1,0 +1,35 @@
+<div class="container-fluid">
+    <div class="form-group">
+        <form name="register" action="register.php" method="POST" style="width: 50%; margin: auto; float: none;">
+            <div class="form-group">
+                <label for="username">Nazwa użytkownika</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Adres e-mail</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="pwd">Hasło</label>
+                <input type="password" class="form-control" id="pwd" name="password" required>
+            </div>
+            <div class="form-group">
+                <label for="pwd2">Potwierdź hasło</label>
+                <input type="password" class="form-control" id="pwd2" name="confirmPassword" required>
+            </div>
+            <div class="form-group">
+                <label for="birth_date">Data urodzenia</label>
+                <input type="date" class="form-control" id="birth_date" name="birthDate" required>
+            </div>
+            <div class="form-group">
+                <div class="radio-inline">
+                    <label><input type="radio" name="gender" value="male">Mężczyzna</label>
+                </div>
+                <div class="radio-inline">
+                    <label><input type="radio" name="gender" value="female">Kobieta</label>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success">Zarejestruj się</button>
+        </form>
+    </div>
+</div>

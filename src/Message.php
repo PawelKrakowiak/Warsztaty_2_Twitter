@@ -75,18 +75,26 @@ class Message {
             if ($result == true) {
                 $this->id = $connection->insert_id;
                 return $result;
-            } else {
-                echo $connection->error;
             }
         } else {
-            $sql = "UPDATE Messages SET sender_id = '$this->senderId', reciver_id = '$this->receiverId', text = '$this->text', "
-                    . "creation_date = '$this->creationDate', is_read = '$this->isRead' WHERE id = $this->id";
+            $sql = "UPDATE Messages SET sender_id = '$this->senderId', receiver_id = '$this->receiverId', text = '$this->text', "
+                    . "creation_date = '$this->creationDate', is_read = $this->isRead WHERE id = $this->id";
             $result = $connection->query($sql);
             if ($result == true) {
                 return $result;
             }
         }
-        return $result;
+        return false;
+    }
+
+    public function Read(mysqli $connection) {
+        if ($this->isRead == 0) {
+            $this->isRead = 1;
+            $this->saveToDB($connection);
+            return "changed";
+        } else {
+            return "not changed";
+        }
     }
 
     static public function loadMessageById(mysqli $connection, $id) {
@@ -151,14 +159,7 @@ class Message {
         if (1 == 1) {
             $message = new Message();
             $message->setCreationDate($time)->setText($text)->setSenderId($senderId)->setReceiverId($receiverId);
-
-            if ($message->saveToDB($connection) == true) {
-                echo "Wysłano wiadomość :)<br>";
-                return true;
-            } else {
-                echo "Błąd, nie udało się wysłać wiadomości :( <br>";
-                return false;
-            }
+            $message->saveToDB($connection);
         }
     }
 
